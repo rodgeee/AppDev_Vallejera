@@ -6,4 +6,7 @@ export default {
     // Main
     HOME: 'Home',
     PROFILE: 'Profile',
+
+    // Error
+    ERROR: 'Error Screen',
 };
