@@ -4,23 +4,32 @@ import createSagaMiddleware from 'redux-saga';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import auth from '../reducers/auth.js';
+import auth from '../reducers/auth';
+import cart from '../reducers/cart';
 
 const sagaMiddleware = createSagaMiddleware();
 const rootPersistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    blacklist: ['auth'],
+    blacklist: ['auth', 'cart'],
 };
 
 const authPersistConfig = {
     key: 'auth',
+    storage: AsyncStorage,
+    // Never persist UI flags — avoids "Please wait..." stuck on Login after reload
+    blacklist: ['isLoading', 'isError', 'error'],
+};
+
+const cartPersistConfig = {
+    key: 'cart',
     storage: AsyncStorage,
     blacklist: [],
 };
 
 const rootReducer = combineReducers({
     auth: persistReducer(authPersistConfig, auth),
+    cart: persistReducer(cartPersistConfig, cart),
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

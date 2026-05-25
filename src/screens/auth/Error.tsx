@@ -8,9 +8,7 @@ import { COLORS, RADIUS, SHADOWS, SPACING } from '../../utils/theme';
 
 export default function ErrorScreen() {
   const dispatch = useDispatch();
-  const { isError, error } = useSelector((state: any) => state.auth || {});
-
-  if (!isError) return null;
+  const { error } = useSelector((state: any) => state.auth || {});
 
   const message =
     typeof error === 'string' && error.trim().length ? error.trim() : 'Something went wrong';

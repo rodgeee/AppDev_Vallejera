@@ -9,7 +9,7 @@ type CustomButtonProps = {
   textStyle?: any;
   route?: string;
   onPress?: () => void;
-  variant?: 'primary' | 'secondary' | string;
+  variant?: 'primary' | 'secondary' | 'dark' | 'loginPrimary' | string;
   disabled?: boolean;
 };
 
@@ -33,20 +33,29 @@ export default function CustomButton({
     }
   };
 
+  const isLoginPrimary = variant === 'loginPrimary';
+
   const defaultMainStyle = {
-    backgroundColor: variant === 'primary' ? COLORS.primary : COLORS.success,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.xl,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.sm,
+    backgroundColor:
+      variant === 'secondary'
+        ? COLORS.success
+        : variant === 'dark'
+          ? COLORS.accent
+          : COLORS.primary,
+    paddingVertical: isLoginPrimary ? 16 : SPACING.md,
+    paddingHorizontal: isLoginPrimary ? 20 : SPACING.xl,
+    borderRadius: isLoginPrimary ? RADIUS.none : RADIUS.md,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    ...(isLoginPrimary ? {} : SHADOWS.sm),
   };
 
   const defaultTextStyle = {
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: isLoginPrimary ? 13 : 16,
+    fontWeight: isLoginPrimary ? '700' : '600',
+    letterSpacing: isLoginPrimary ? 0.8 : 0,
+    textTransform: isLoginPrimary ? 'uppercase' : 'none',
   };
 
   return (
