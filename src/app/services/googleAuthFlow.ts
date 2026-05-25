@@ -1,4 +1,5 @@
-import { googleLogin, type GoogleAuthAction, type GoogleLoginResult } from '../api/googleAuth';
+import { googleLogin, type GoogleAuthAction } from '../api/googleAuth';
+import { signInToFirebaseWithGoogle, signOutFirebaseGoogle } from './firebaseGoogleAuth';
 import { getGoogleIdToken, getGoogleSignInErrorMessage } from './googleSignIn';
 
 export type GoogleAuthFlowResult =
@@ -26,12 +27,23 @@ export async function performNativeGoogleAuth(
   }
 
   try {
+    await signInToFirebaseWithGoogle(idToken, action);
+  } catch (err: unknown) {
+    return {
+      error:
+        err instanceof Error ? err.message : 'Firebase Google sign-in failed.',
+    };
+  }
+
+  try {
     const apiResult = await googleLogin({ idToken, action });
     if (apiResult.success) {
       return { success: true, token: apiResult.token };
     }
+    await signOutFirebaseGoogle();
     return { pending: true, message: apiResult.message };
   } catch (err: unknown) {
+    await signOutFirebaseGoogle();
     return {
       error: err instanceof Error ? err.message : 'Google sign-in failed.',
     };

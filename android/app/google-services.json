@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "45503149806",
+    "project_id": "shoesrus-690a6",
+    "storage_bucket": "shoesrus-690a6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45503149806:android:f62031c6c4934ca2a0a5ff",
+        "android_client_info": {
+          "package_name": "com.vallejera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45503149806-j1fgcqq422fmbo623eddm8cj5pfadvi9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vallejera",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "45503149806-ujp1g7jncm5vcdgh67gvv461n97pg9do.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3KlaC1W04HJy0CGqOLthmaLCvC66sD5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45503149806-4gl1n00c5autjkatq73cs9t4g6ooshej.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
