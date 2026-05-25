@@ -158,7 +158,12 @@ const CheckoutSuccessScreen = () => {
                       borderColor: COLORS.border,
                     }}
                   >
-                    <Icon name="card-outline" size={14} color={COLORS.primary} style={{ marginRight: 4 }} />
+                    <Icon
+                      name={paymentMethod === 'COD' ? 'cash-outline' : 'card-outline'}
+                      size={14}
+                      color={COLORS.primary}
+                      style={{ marginRight: 4 }}
+                    />
                     <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.text }}>{paymentMethod}</Text>
                   </View>
                 ) : null}

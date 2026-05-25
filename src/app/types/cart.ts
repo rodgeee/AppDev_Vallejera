@@ -11,5 +11,5 @@ export type CartLine = {
   availableStock: number;
 };
 
-export const PAYMENT_METHODS = ['COD', 'GCash', 'Bank Transfer', 'Card'] as const;
+export const PAYMENT_METHODS = ['COD'] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];

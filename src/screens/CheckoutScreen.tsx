@@ -188,24 +188,23 @@ const CheckoutScreen = () => {
         ) : null}
 
         <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text, marginBottom: SPACING.md }}>
-          Payment
+          Payment method
         </Text>
-        {PAYMENT_METHODS.map((method) => (
-          <TouchableOpacity
-            key={method}
-            onPress={() => setPaymentMethod(method)}
-            style={{
-              backgroundColor: COLORS.white,
-              borderRadius: RADIUS.md,
-              padding: SPACING.md,
-              marginBottom: SPACING.sm,
-              borderWidth: 2,
-              borderColor: paymentMethod === method ? COLORS.primary : COLORS.border,
-            }}
-          >
-            <Text style={{ fontWeight: '600', color: COLORS.text }}>{method}</Text>
-          </TouchableOpacity>
-        ))}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: RADIUS.md,
+            padding: SPACING.md,
+            marginBottom: SPACING.sm,
+            borderWidth: 2,
+            borderColor: COLORS.primary,
+          }}
+        >
+          <Text style={{ fontWeight: '600', color: COLORS.text }}>{paymentMethod}</Text>
+          <Text style={{ marginTop: 4, fontSize: 12, color: COLORS.textMuted }}>
+            Cash on Delivery only.
+          </Text>
+        </View>
 
         <Text
           style={{
