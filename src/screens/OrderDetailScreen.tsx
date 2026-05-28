@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { cancelOrder, fetchOrder } from '../app/api/orders';
 import { resolveAssetUrl } from '../app/api/client';
 import type { OrderDetail } from '../app/api/types';
+import { useFocusPolling } from '../app/hooks/useFocusPolling';
 import { useAuthToken } from '../app/hooks/useAuthToken';
+import { displayOrderStatusUpdateNotification } from '../app/services/pushNotifications';
 import { useAppAlert } from '../app/context/AppAlertContext';
 import CustomButton from '../Components/CustomButton';
 import ErrorState from '../Components/ErrorState';
@@ -24,29 +26,44 @@ const OrderDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastStatusRef = useRef<string | null>(null);
+  const hasOrderRef = useRef(false);
+  hasOrderRef.current = order !== null;
 
-  const load = useCallback(async () => {
-    if (!token || !orderId) {
-      setError('Invalid order.');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      setOrder(await fetchOrder(token, orderId));
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to load order.');
-    } finally {
-      setLoading(false);
-    }
-  }, [token, orderId]);
-
-  useFocusEffect(
-    useCallback(() => {
-      load();
-    }, [load]),
+  const load = useCallback(
+    async (silent = false) => {
+      if (!token || !orderId) {
+        setError('Invalid order.');
+        setLoading(false);
+        return;
+      }
+      if (!silent) {
+        setLoading(true);
+        setError(null);
+      }
+      try {
+        const next = await fetchOrder(token, orderId);
+        const previousStatus = lastStatusRef.current;
+        const nextStatus = next.orderStatus.trim();
+        if (previousStatus && previousStatus !== nextStatus) {
+          void displayOrderStatusUpdateNotification(next.orderNumber, nextStatus);
+        }
+        lastStatusRef.current = nextStatus;
+        setOrder(next);
+      } catch (e: unknown) {
+        if (!silent) {
+          setError(e instanceof Error ? e.message : 'Failed to load order.');
+        }
+      } finally {
+        if (!silent) {
+          setLoading(false);
+        }
+      }
+    },
+    [token, orderId],
   );
+
+  useFocusPolling(() => load(hasOrderRef.current), { enabled: Boolean(token && orderId) });
 
   const confirmCancel = () => {
     if (!order || !token) {
@@ -83,7 +100,7 @@ const OrderDetailScreen = () => {
   }
 
   if (error || !order) {
-    return <ErrorState message={error || 'Order not found.'} onRetry={load} />;
+    return <ErrorState message={error || 'Order not found.'} onRetry={() => load(false)} />;
   }
 
   const cancellable = canCancelOrder(order.orderStatus);

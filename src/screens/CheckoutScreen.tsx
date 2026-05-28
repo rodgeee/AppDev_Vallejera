@@ -16,6 +16,7 @@ import { PAYMENT_METHODS, type PaymentMethod } from '../app/types/cart';
 import { useAuthToken } from '../app/hooks/useAuthToken';
 import { useAppAlert } from '../app/context/AppAlertContext';
 import { useCart } from '../app/hooks/useCart';
+import { displayOrderSuccessNotification } from '../app/services/pushNotifications';
 import { cartTotal } from '../app/reducers/cart';
 import CustomButton from '../Components/CustomButton';
 import ErrorState from '../Components/ErrorState';
@@ -94,6 +95,11 @@ const CheckoutScreen = () => {
           size: l.size,
         })),
         orderNotes: orderNotes.trim() || undefined,
+      });
+      displayOrderSuccessNotification(order.orderNumber).catch((error: unknown) => {
+        if (__DEV__) {
+          console.warn('Failed to display order success notification:', error);
+        }
       });
       removeMany(checkoutLines.map((l) => l.lineKey));
       navigation.replace(ROUTES.CHECKOUT_SUCCESS, {

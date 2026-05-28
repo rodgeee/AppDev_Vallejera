@@ -7,6 +7,7 @@ import createStore from './src/app/reducers';
 import { setApiUnauthorizedHandler } from './src/app/api/client';
 import { configureGoogleSignIn } from './src/app/services/googleSignIn';
 import { AppAlertProvider } from './src/app/context/AppAlertContext';
+import { requestLocalNotificationPermission } from './src/app/services/pushNotifications';
 
 const { store, persistor } = createStore();
 
@@ -16,6 +17,7 @@ setApiUnauthorizedHandler(null);
 const App = () => {
   useEffect(() => {
     configureGoogleSignIn();
+    requestLocalNotificationPermission().catch(() => {});
   }, []);
 
   return (
